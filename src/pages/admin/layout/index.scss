@@ -1,0 +1,192 @@
+.AdminLayout {
+  min-height: 100vh;
+  display: flex;
+  color: var(--cl-secondary);
+  background-color: #f4f7fa;
+}
+
+.AdminMain {
+  flex-grow: 1;
+  width: calc(100% - 24px);
+  overflow-x: auto;
+}
+
+.AdminContainer {
+  padding: 65px 40px 20px;
+}
+
+.AdminSidebar {
+  transition: all 0.3s ease;
+  position: relative;
+  width: 72px;
+  min-width: 72px;
+  color: var(--cl-secondary);
+  background-color: white;
+  box-shadow: rgba(159, 162, 191, 0.18) 2px 0px 3px, rgba(159, 162, 191, 0.32) 1px 0px 1px;
+  z-index: 99;
+
+  .MuiListItemText-root {
+    white-space: nowrap;
+  }
+
+  &-label {
+    transition: color 0.3s ease;
+
+    &.big {
+      span {
+        font-size: 18px !important;
+        font-weight: 600 !important;
+      }
+    }
+
+    &:not(.active) {
+      color: transparent;
+    }
+  }
+
+  &-menu {
+    display: flex;
+    padding: 0;
+    border-bottom: 1px solid rgb(232, 235, 239);
+    height: 80px;
+    align-items: center;
+    margin: 0 16px;
+    justify-content: space-between;
+
+    &__left {
+      display: flex;
+      align-items: center;
+    }
+
+    &__close {
+      margin-right: -8px !important;
+      border-radius: 99px !important;
+
+      i {
+        font-size: 20px !important;
+      }
+    }
+
+    button {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 8px;
+      color: var(--primary-100);
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        background-color: var(--cl-neutral);
+      }
+
+      &.active {
+        background-color: #1976d21f;
+        color: var(--cl-primary);
+      }
+
+      i {
+        font-size: 24px;
+      }
+    }
+  }
+
+  &-scroll {
+    height: 100vh;
+    padding-bottom: 30px;
+  }
+
+  &-wrapper {
+    position: fixed;
+    width: 72px;
+    min-width: 72px;
+    transition: all 0.3s ease;
+    overflow-x: hidden;
+  }
+
+  &.open {
+    width: 240px;
+    min-width: 240px;
+
+    .AdminSidebar-wrapper {
+      width: 240px;
+      min-width: 240px;
+    }
+  }
+
+  &.close {
+    .AdminSidebar-scroll {
+      overflow-y: hidden;
+    }
+  }
+
+  &-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    cursor: pointer;
+  }
+}
+
+.NavSection {
+  color: var(--cl-secondary);
+
+  &-item {
+    height: 56px;
+    position: relative;
+
+    &:hover {
+      background-color: rgba(145, 158, 171, 0.08) !important;
+    }
+
+    &.active,
+    &.active:hover {
+      background-color: #1976d21f;
+      color: var(--cl-primary);
+
+      &::before {
+        top: 0px;
+        right: 0px;
+        width: 3px;
+        bottom: 0px;
+        content: '';
+        position: absolute;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background-color: var(--cl-primary);
+      }
+    }
+
+    i {
+      font-size: 24px;
+      margin-right: 12px;
+      width: 28px;
+      min-width: 28px;
+      display: flex;
+      justify-content: center;
+      margin-left: 8px;
+    }
+
+    span {
+      font-weight: 600;
+      font-size: 13px;
+    }
+  }
+}
+
+.Navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  background-color: white;
+  box-shadow: rgba(159, 162, 191, 0.18) 0px 2px 3px, rgba(159, 162, 191, 0.32) 0px 1px 1px;
+  height: 80px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 40px;
+  z-index: 98;
+}

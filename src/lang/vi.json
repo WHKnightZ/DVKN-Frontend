@@ -1,0 +1,19 @@
+{
+  "dashboard": "Thống kê",
+  "card_management": "Thẻ bài",
+  "sign_in": "Đăng nhập",
+  "sign_out": "Đăng xuất",
+  "confirmation": "Xác nhận",
+  "sure_sign_out": "Bạn có muốn đăng xuất không?",
+  "lbl_yes": "Có",
+  "lbl_no": "Không",
+  "number": "STT",
+  "created_date": "Ngày tạo",
+  "actions": "Thao tác",
+  "cancel": "Hủy",
+  "create": "Tạo",
+  "update": "Sửa",
+  "profile": "Trang cá nhân",
+  "change_password": "Đổi mật khẩu",
+  "forgot_password": "Quên mật khẩu"
+}

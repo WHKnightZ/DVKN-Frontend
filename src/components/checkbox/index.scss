@@ -1,0 +1,20 @@
+.Checkbox {
+  display: flex;
+  align-items: center;
+
+  span {
+    color: var(--cl-secondary);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  &.disabled {
+    span {
+      opacity: 0.5;
+    }
+  }
+
+  .MuiCheckbox-root.Mui-disabled {
+    color: var(--cl-secondary);
+  }
+}

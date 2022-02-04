@@ -1,0 +1,58 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "plugins": ["react", "@typescript-eslint", "jest"],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jest": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "settings": {
+    "react": {
+      "pragma": "React",
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "prettier/prettier": ["error"],
+    "semi": ["error", "never"],
+    "quotes": ["error", "single"],
+    "react/prop-types": 2,
+    "object-curly-spacing": ["error", "always"],
+    "max-len": ["error", { "code": 100 }],
+    "prefer-const": "error",
+    "indent": [
+      "error",
+      2,
+      { "SwitchCase": 1, "VariableDeclarator": 1, "ignoredNodes": ["TemplateLiteral"] }
+    ],
+    "no-var": ["error"],
+    "array-callback-return": ["error"],
+    "eqeqeq": [2, "smart"],
+    "eol-last": ["error", "always"],
+    "no-empty": ["error", { "allowEmptyCatch": true }],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"]
+  }
+}

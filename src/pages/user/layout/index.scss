@@ -1,0 +1,14 @@
+.Layout {
+  min-height: 100vh;
+  display: flex;
+  color: var(--cl-secondary);
+  // background-color: #f4f7fa;
+  background-color: #ecf1f5;
+}
+
+.Main {
+  flex-grow: 1;
+  width: calc(100% - 24px);
+  overflow-x: auto;
+  padding: 0px 40px;
+}

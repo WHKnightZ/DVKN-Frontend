@@ -1,20 +1,12 @@
 /* eslint-disable */
-import { useEffect, useState } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
-import { useFormik, Form, FormikProvider } from 'formik'
-import { Stack, Button as MuiButton } from '@mui/material'
-import { Input, Button, Page } from 'components'
-import { useTranslation } from 'react-i18next'
-import { validateTypingNumber } from 'utils'
-import { useApis } from 'services/api'
-import { apiUrls } from 'configs/apis'
+import { useHistory } from 'react-router-dom'
+import { Button, Page } from 'components'
 import { useAuth } from 'store/auth'
 
 import './index.scss'
 
 const InitDeck: React.FC = () => {
   const { card_images = [] } = useAuth()
-  const { t } = useTranslation()
   const history = useHistory()
 
   const title = 'Bộ bài'

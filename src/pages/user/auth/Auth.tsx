@@ -88,7 +88,6 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
               <Stack spacing={3} mb={3}>
                 <Input
                   fullWidth
-                  size="medium"
                   autoComplete="username"
                   label="Tài khoản"
                   {...getFieldProps('username')}
@@ -107,7 +106,6 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
                 <Input
                   fullWidth
                   type="password"
-                  size="medium"
                   autoComplete="password"
                   label="Mật khẩu"
                   {...getFieldProps('password')}
@@ -132,7 +130,6 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
               <Button
                 loading={loading}
                 fullWidth
-                size="large"
                 type="submit"
                 variant="contained"
                 disabled={loading}

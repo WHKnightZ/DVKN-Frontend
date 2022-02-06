@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Card } from '@mui/material'
 import { Button } from 'components'
 import { apiUrls } from 'configs/apis'
@@ -5,58 +6,66 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApis } from 'services/api'
 import { useAuth } from 'store/auth'
+import { AuthType } from 'types'
+import { getWinRate } from 'utils'
+import './index.scss'
 
 const Home: React.FC = () => {
-  const { apiGet, apiPost } = useApis()
-  const { signOut } = useAuth()
+  const { apiGet } = useApis()
+  const {
+    updateAuth,
+    username,
+    avatar,
+    level,
+    exp,
+    health,
+    win_battle,
+    total_battle,
+    gold,
+    diamond,
+    barrel,
+  } = useAuth()
   const history = useHistory()
 
-  const [users, setUsers] = useState<{ username: string; avatar: string }[]>([])
-
   useEffect(() => {
-    apiGet(apiUrls.users(), { page_size: 12 }, ({ status, data }) => {
-      if (status) setUsers(data.items)
+    apiGet(apiUrls.profile(), {}, ({ status, data }) => {
+      if (status) {
+        updateAuth(data)
+      }
     })
   }, [])
 
-  const attack = (username: string) => {
-    apiPost(
-      apiUrls.battle(),
-      {
-        username,
-      },
-      ({ status, data }) => {
-        if (status) {
-          localStorage.setItem('check-refresh', 'ok')
-          history.push('/chien-dau', data)
-        }
-      }
-    )
-  }
-
   return (
-    <div>
-      <div style={{ margin: '40px 20px' }}>
-        <Button variant="contained" onClick={() => signOut()}>
-          Thoát
-        </Button>
-      </div>
-      <div className="row" style={{ maxWidth: 840, margin: '0 auto' }}>
-        {users.map(({ username, avatar }) => (
-          <div key={username} className="mb-2 col-4">
-            <Card className="d-f">
-              <div className="d-f fd-c ai-c" style={{ marginRight: 12 }}>
-                <img alt="" src={avatar} style={{ width: 80, height: 109, marginBottom: 8 }} />
-                <div style={{ fontSize: 13.5 }}>{username}</div>
-              </div>
-
-              <Button variant="outlined" style={{ height: 28 }} onClick={() => attack(username)}>
-                Đánh
-              </Button>
-            </Card>
+    <div className="Home">
+      <h2 className="mb-2">Trang cá nhân</h2>
+      {!!avatar && (
+        <div className="d-f">
+          <div className="d-f fd-c ai-c">
+            <img alt="" src={avatar} />
+            <div className="b" style={{ marginTop: 4 }}>
+              <button className="btn-link" onClick={() => {}}>
+                Xem Đội hình
+              </button>
+            </div>
           </div>
-        ))}
-      </div>
+          <div className="ml-1 p-1 Home-info">
+            <div style={{ marginBottom: 6 }}>
+              Xin chào: <b>{username}</b>
+            </div>
+            <div>Cấp đội: {level}</div>
+            <div>Kinh nghiệm: {exp}</div>
+            <div>
+              Sức khỏe: {health}/{health}
+            </div>
+            <div>Vàng: {gold}</div>
+            <div>Ngọc: {diamond}</div>
+            <div>Vò rượu: {barrel}</div>
+            <div>
+              Thắng: {win_battle}/{total_battle} ({getWinRate(win_battle, total_battle)}%)
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

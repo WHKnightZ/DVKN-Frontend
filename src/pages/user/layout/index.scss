@@ -4,6 +4,7 @@
   color: var(--cl-secondary);
   // background-color: #f4f7fa;
   background-color: #ecf1f5;
+  justify-content: center;
 }
 
 .Main {
@@ -11,10 +12,11 @@
   width: calc(100% - 24px);
   overflow-x: auto;
   padding: 0px 40px;
+  max-width: 840px;
 }
 
 @media screen and (max-width: 860px) {
   .Main {
-    padding: 0px 8px;
+    padding: 0px 12px;
   }
 }

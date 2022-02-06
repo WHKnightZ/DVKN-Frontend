@@ -34,6 +34,15 @@ export type AuthType = {
   refresh_token?: string
   card_images?: { id: string; image: string }[]
   is_admin?: boolean
+  avatar?: string
+  barrel?: number
+  diamond?: number
+  exp?: number
+  gold?: number
+  health?: number
+  level?: number
+  total_battle?: number
+  win_battle?: number
 }
 
 export type SelectType = { value: any; label: string }
@@ -110,4 +119,6 @@ export type CardType = {
   attack: any
   defend: any
   army: any
+  level?: any
+  is_in_deck?: boolean
 }

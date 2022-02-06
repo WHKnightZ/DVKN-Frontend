@@ -129,7 +129,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
       const done = () => {
         request(
           cardId ? 'put' : 'post',
-          apiUrls.cards(cardId),
+          apiUrls.adminCards(cardId),
           {
             id: cardId ? undefined : id,
             name,

@@ -18,6 +18,9 @@ import { updateAuth } from 'store/auth/actions'
 
 import AdminLayout from 'pages/admin/layout/Layout'
 import UserLayout from 'pages/user/layout/Layout'
+import PrivateRoute from 'privateRoute'
+
+const Battle = React.lazy(() => import('pages/user/battle/Battle'))
 
 const App: React.FC = () => {
   const [initializing, setInitializing] = useState(true)
@@ -46,6 +49,13 @@ const App: React.FC = () => {
         <ScrollToTop>
           <Switch>
             <Route path="/admin" component={AdminLayout} />
+            <PrivateRoute
+              path="/chien-dau"
+              title="Chiến đấu"
+              component={Battle}
+              className="h-100"
+              checkRefresh
+            />
             <Route path="/" component={UserLayout} />
             <Redirect to="/" />
           </Switch>

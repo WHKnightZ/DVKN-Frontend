@@ -1,2 +1,7 @@
 .Home {
+  &-info {
+    & > div {
+      margin-bottom: 3px;
+    }
+  }
 }

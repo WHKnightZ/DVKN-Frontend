@@ -1,27 +1,21 @@
 import React, { Suspense } from 'react'
 import './index.scss'
-import { Redirect, Route, Switch } from 'react-router'
+import { Route, Switch } from 'react-router'
 import PrivateRoute from 'privateRoute'
 import { loading } from 'configs/extensions'
 
 import SignIn from '../auth/SignIn'
 import SignUp from '../auth/SignUp'
 import InitDeck from '../auth/InitDeck'
-import Home from '../home/Home'
+import MainLayout from './MainLayout'
 
-const Battle = React.lazy(() => import('../battle/Battle'))
-
-const routes = [
-  { path: 'khoi-tao', component: InitDeck, title: 'Bộ bài' },
-  {
-    path: 'chien-dau',
-    component: Battle,
-    title: 'Chiến đấu',
-    className: 'h-100',
-    checkRefresh: true,
-  },
-  { path: '', component: Home, title: 'Trang chủ' },
-]
+const routes: {
+  path: string
+  component: any
+  title: string
+  className?: string
+  checkRefresh?: boolean
+}[] = [{ path: 'khoi-tao', component: InitDeck, title: 'Bộ bài' }]
 
 const Layout: React.FC = () => {
   return (
@@ -42,7 +36,7 @@ const Layout: React.FC = () => {
             ))}
             <Route exact component={SignIn} path="/dang-nhap" />
             <Route exact component={SignUp} path="/dang-ky" />
-            <Redirect to="/dang-nhap" />
+            <Route component={MainLayout} path="/" />
           </Switch>
         </Suspense>
       </div>

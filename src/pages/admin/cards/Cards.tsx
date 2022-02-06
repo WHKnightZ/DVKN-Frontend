@@ -46,7 +46,7 @@ const Cards: React.FC = () => {
   const deleteItem = useCallback(
     (id: string) => {
       setLoading(true)
-      apiDelete(apiUrls.cards(id), {}, ({ status }) => {
+      apiDelete(apiUrls.adminCards(id), {}, ({ status }) => {
         if (status) {
           getItems()
         } else setLoading(false)

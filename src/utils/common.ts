@@ -83,3 +83,7 @@ export const convertToId = (name: string) => {
       .replace(/\s+/g, '-')
   )
 }
+
+export const getWinRate = (win_battle: any, total_battle: any) => {
+  return Math.floor(((win_battle || 0) * 100) / (total_battle || 1))
+}

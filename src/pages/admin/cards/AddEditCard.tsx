@@ -1,11 +1,12 @@
 /* eslint-disable */
 import { Card, InputAdornment } from '@mui/material'
-import { Button, ChooseImage, Input, Select, Title } from 'components'
+import { Button, ChooseImage, Input, InputNumber, Select, Title } from 'components'
 import { Form, FormikProvider, useFormik } from 'formik'
 import React, { useEffect, useRef, useState } from 'react'
 import {
   imgElements,
   imgFrame,
+  imgInactiveStars,
   imgStar,
   imgTypeFrame,
   isLoadedImages,
@@ -19,13 +20,13 @@ import { apiUrls } from 'configs/apis'
 import { CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH2, CARD_HEIGHT2 } from 'configs/constants'
 import * as Yup from 'yup'
 import './index.scss'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 let fileThumbnail: any
 
 const drawCard = ({
   canvas,
-  rank = 4,
+  rank = 2,
   thumbnail,
   element = 0,
   type = CARD_TYPES.CIVILIAN,
@@ -40,11 +41,13 @@ const drawCard = ({
   ctx.clearRect(0, 0, CARD_WIDTH2, CARD_HEIGHT2)
   ctx.drawImage(imgElements[element], 0, 0)
   thumbnail && ctx.drawImage(thumbnail, 17, 17, 275, 374)
-  for (let i = 0; i <= rank; i += 1) {
-    ctx.drawImage(imgStar, 94 + i * 32, 398)
-  }
+
+  const drawStar = (img: any, i: number) => ctx.drawImage(img, 94 + i * 33, 398)
+  for (let i = 0; i <= rank; i += 1) drawStar(imgStar, i)
+  for (let i = rank + 1; i <= 4; i += 1) drawStar(imgInactiveStars[element], i)
+
   ctx.drawImage(imgFrame, 0, 0)
-  ctx.drawImage(mappingCardTypeImage[type], 13, 375)
+  ctx.drawImage(mappingCardTypeImage[type], 13, 376)
   ctx.drawImage(imgTypeFrame, 9, 374)
 
   // ctx.font = '48px Card-Name'
@@ -100,6 +103,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     initialValues: defaultInitialValues,
     enableReinitialize: true,
     validationSchema: schema(error),
+    validateOnChange: false,
+    validateOnBlur: true,
     onSubmit: (
       { name, id, type, element, description, attack, defend, army, probability_register },
       { validateForm }
@@ -124,7 +129,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
       const done = () => {
         request(
           cardId ? 'put' : 'post',
-          apiUrls.cards(cardId),
+          apiUrls.adminCards(cardId),
           {
             id: cardId ? undefined : id,
             name,
@@ -197,6 +202,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     isSubmitting,
     touched,
     errors,
+    handleBlur,
+    setFieldError,
   } = formik
 
   const { name, type, thumbnail, imgThumbnail, element } = values
@@ -239,6 +246,14 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     }
   }, [thumbnail])
 
+  const autoGenId = () => {
+    if (hasId.current) return
+    const value = nameRef.current?.value || ''
+    if (!value) return
+    setFieldValue('id', convertToId(value))
+    hasId.current = true
+  }
+
   return (
     <>
       {!!cardId && <Title>Thẻ bài {name || cardId}</Title>}
@@ -253,12 +268,12 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     inputRef={nameRef}
                     label="Tên thẻ bài"
                     {...getFieldProps('name')}
-                    onBlur={() => {
-                      if (hasId.current) return
-                      const value = nameRef.current?.value || ''
-                      if (!value) return
-                      setFieldValue('id', convertToId(value))
-                      hasId.current = true
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') autoGenId()
+                    }}
+                    onBlur={(e) => {
+                      handleBlur(e)
+                      autoGenId()
                     }}
                     disabled={loading}
                     maxLength={36}
@@ -273,7 +288,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                       hasId.current = true
                     }}
                     maxLength={36}
-                    error={errors.id}
+                    error={!values.id ? errors.id : ''}
                     errorEmpty={isSubmitting || touched.id}
                     errorFocused={!!error.value && values.id === error.value}
                     disabled={!!cardId}
@@ -298,12 +313,14 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                       setFieldValue('element', s)
                     }}
                   />
-                  <Input
+                  <InputNumber
                     label="Tỉ lệ xuất hiện"
                     {...getFieldProps('probability_register')}
                     InputProps={{
                       endAdornment: <InputAdornment position="end">%</InputAdornment>,
                     }}
+                    min={0}
+                    max={100}
                   />
                   <Input label="Thông tin" rows={3} multiline {...getFieldProps('description')} />
                 </div>
@@ -322,13 +339,13 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                   <div className="form-title mt-2">Chỉ số</div>
                   <div className="row jc-c" style={{ width: '75%' }}>
                     <div className="col-6">
-                      <Input label="Công" {...getFieldProps('attack')} />
+                      <InputNumber label="Công" {...getFieldProps('attack')} min={10} max={50} />
                     </div>
                     <div className="col-6">
-                      <Input label="Thủ" {...getFieldProps('defend')} />
+                      <InputNumber label="Thủ" {...getFieldProps('defend')} min={10} max={50} />
                     </div>
                     <div className="col-6">
-                      <Input label="Lính" {...getFieldProps('army')} />
+                      <InputNumber label="Lính" {...getFieldProps('army')} min={10} max={50} />
                     </div>
                   </div>
                 </div>

@@ -7,9 +7,13 @@ export const apiUrls = {
   recovery: () => '/api/v1/auth/recovery',
   forceChange: () => '/api/v1/auth/password/force-change',
   refresh: () => '/api/v1/auth/token/refresh',
-  users: () => '/api/v1/users',
+  battlePlayers: () => '/api/v1/battle/players',
   battle: () => '/api/v1/battle',
+  profile: () => '/api/v1/profile',
+  cards: (id?: string) => `/api/v1/cards${id ? `/${id}` : ''}`,
+  deck: () => '/api/v1/cards/deck',
+  upgradeCard: (id: string) => `/api/v1/cards/${id}/upgrade`,
 
   // Manage
-  cards: (id?: string) => `/api/v1/manage/cards${id ? `/${id}` : ''}`,
+  adminCards: (id?: string) => `/api/v1/manage/cards${id ? `/${id}` : ''}`,
 }

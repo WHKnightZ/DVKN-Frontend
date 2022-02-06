@@ -12,10 +12,14 @@ import * as Yup from 'yup'
 
 import './index.scss'
 
-const validationSchema = Yup.object().shape({
-  username: Yup.string().trim().required('Tài khoản không được để trống'),
-  password: Yup.string().required('Mật khẩu không được để trống'),
-})
+const schema = (error: any) =>
+  Yup.object().shape({
+    username: Yup.string()
+      .trim()
+      .required('Tài khoản không được để trống')
+      .notOneOf([error.value], error.text),
+    password: Yup.string().required('Mật khẩu không được để trống'),
+  })
 
 interface Props {
   isSignUp?: boolean
@@ -28,6 +32,7 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
   const history = useHistory()
 
   const [error, setError] = useState('')
+  const [error2, setError2] = useState({ value: '', text: '' })
   const [loading, setLoading] = useState(false)
 
   const formik = useFormik({
@@ -35,13 +40,14 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
       username: '',
       password: '',
     },
-    validationSchema,
-    onSubmit: ({ username, password }, { resetForm }) => {
+    validationSchema: schema(error2),
+    onSubmit: ({ username, password }, { validateForm }) => {
+      username = username.trim()
       setLoading(true)
       apiPost(
         apiUrls[isSignUp ? 'signUp' : 'signIn'](),
         {
-          username: username.trim(),
+          username,
           password,
         },
         ({ status, data, text, id }) => {
@@ -55,13 +61,18 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
             }
           } else {
             if (id === '1') setError(text)
+            else if (id === '2') {
+              setError2({ value: username, text })
+              validateForm()
+            }
           }
         }
       )
     },
   })
 
-  const { errors, handleSubmit, getFieldProps, handleChange, isSubmitting, touched } = formik
+  const { errors, handleSubmit, getFieldProps, handleChange, isSubmitting, touched, values } =
+    formik
 
   const title = isSignUp ? 'Đăng ký' : 'Đăng nhập'
 
@@ -77,7 +88,6 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
               <Stack spacing={3} mb={3}>
                 <Input
                   fullWidth
-                  size="medium"
                   autoComplete="username"
                   label="Tài khoản"
                   {...getFieldProps('username')}
@@ -86,15 +96,16 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
                     if (e.target.value === '' || !e.target.value.includes(' ')) handleChange(e)
                   }}
                   disabled={loading}
-                  errorFocused={!!error}
+                  errorFocused={
+                    isSignUp ? !!error2.value && values.username === error2.value : !!error
+                  }
                   maxLength={36}
-                  error={error ? true : errors.username}
+                  error={isSignUp ? errors.username : error ? true : errors.username}
                   errorEmpty={isSubmitting || touched.username}
                 />
                 <Input
                   fullWidth
                   type="password"
-                  size="medium"
                   autoComplete="password"
                   label="Mật khẩu"
                   {...getFieldProps('password')}
@@ -119,7 +130,6 @@ const Auth: React.FC<Props> = ({ isSignUp }) => {
               <Button
                 loading={loading}
                 fullWidth
-                size="large"
                 type="submit"
                 variant="contained"
                 disabled={loading}

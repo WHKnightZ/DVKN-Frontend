@@ -11,6 +11,11 @@ const imgLocations: any = {
   elementWater: 'element-water',
   elementFire: 'element-fire',
   star: 'star',
+  inactiveStarMetal: 'inactive-star-metal',
+  inactiveStarWood: 'inactive-star-wood',
+  inactiveStarEarth: 'inactive-star-earth',
+  inactiveStarWater: 'inactive-star-water',
+  inactiveStarFire: 'inactive-star-fire',
   frame: 'frame',
   typeCivilian: 'type-civilian',
   typeWorker: 'type-worker',
@@ -46,6 +51,11 @@ const {
   imgElementWater,
   imgElementFire,
   imgStar,
+  imgInactiveStarMetal,
+  imgInactiveStarWood,
+  imgInactiveStarEarth,
+  imgInactiveStarWater,
+  imgInactiveStarFire,
   imgFrame,
   imgTypeCivilian,
   imgTypeWorker,
@@ -65,8 +75,17 @@ const imgElements = [
   imgElementFire,
 ]
 
+const imgInactiveStars = [
+  imgInactiveStarMetal,
+  imgInactiveStarWood,
+  imgInactiveStarEarth,
+  imgInactiveStarWater,
+  imgInactiveStarFire,
+]
+
 export {
   imgElements,
+  imgInactiveStars,
   imgStar,
   imgFrame,
   imgTypeCivilian,

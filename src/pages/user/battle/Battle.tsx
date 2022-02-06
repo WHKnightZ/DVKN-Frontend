@@ -1,149 +1,237 @@
 /* eslint-disable */
 import { CircularProgress } from '@mui/material'
-import { Button } from 'components'
+import { CARD_HEIGHT, CARD_WIDTH } from 'configs/constants'
 import { useEffect, useRef, useState } from 'react'
-import { useApis } from 'services/api'
-import Attacker from './Attacker'
-import Card from './Card'
+import { useLocation } from 'react-router-dom'
 import './index.scss'
+
+const SCREEN_WIDTH = 1200
+const SCREEN_HEIGHT = 640
+const SPACE = 10
+const OFFSET_Y = 48
+
+const DECK_WIDTH = (CARD_WIDTH + SPACE) * 5 - SPACE
 
 type Card = {
   atk: number
   hp: number
   max_hp: number
   image: string
+  imageObject?: any
+  x: number
+  y: number
+  offsetX: number
+  offsetY: number
 }
 
 type Player = {
   cards: Card[]
 }
 
+const backgroundImage = new Image()
+backgroundImage.src = 'https://tdhv.s3.ap-southeast-1.amazonaws.com/tdhv/background-battle.jpg'
+
+const deathImage = new Image()
+deathImage.src = 'https://tdhv.s3.ap-southeast-1.amazonaws.com/cards/rip/4.png'
+
+let attackPlayer = -1
+let defendPlayer = -1
+let attacker = 0
+let defender = 0
+let step = 0
+
+let players: [Player, Player] = [{ cards: [] }, { cards: [] }]
+let battleResult: any[] = []
+
+const inFunc = (x: number) => x * x * x
+const outFunc = (x: number) => {
+  if (x < 0.1) return 0
+  const x2 = (x - 0.1) / 0.9
+  return x2 * x2
+}
+
 const Battle: React.FC = () => {
+  const { state } = useLocation()
+
   const [battle, setBattle] = useState({
     begin: false,
-    loading: false,
-  })
-  const [players, setPlayers] = useState<[Player, Player]>([{ cards: [] }, { cards: [] }])
-  const [battleResult, setBattleResult] = useState<any[]>([])
-
-  const { apiPost } = useApis()
-
-  const playerCards = useRef<[HTMLDivElement[], HTMLDivElement[]]>([
-    Array.from({ length: 5 }),
-    Array.from({ length: 5 }),
-  ])
-
-  const stepRef = useRef(0)
-
-  const [attackerFighting, setAttackerFighting] = useState({
-    step: 0,
-    attacker: 0,
-    defender: 0,
-    attackerLeft: 0,
-    attackerTop: 0,
-    defenderLeft: 0,
-    defenderTop: 0,
-    attackerCard: null,
+    loading: true,
   })
 
-  useEffect(() => {
-    apiPost('/api/v1/battle', {}, ({ status, data }) => {
-      if (status) {
-        setBattleResult(data.battle_result)
-        setPlayers(data.players)
-        setBattle({ begin: false, loading: false })
-      }
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const attackInterval = useRef<any>()
+
+  const draw = () => {
+    if (!canvasRef.current) return
+
+    const ctx = canvasRef.current.getContext('2d') as CanvasRenderingContext2D
+
+    ctx.drawImage(backgroundImage, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    players.forEach((player, playerIndex) => {
+      player.cards.forEach((card, cardIndex) => {
+        if (!(playerIndex === attackPlayer && cardIndex === attacker))
+          ctx.drawImage(
+            card.hp > 0 ? card.imageObject : deathImage,
+            Math.floor(card.x + card.offsetX),
+            Math.floor(card.y + card.offsetY),
+            CARD_WIDTH,
+            CARD_HEIGHT
+          )
+      })
     })
-  }, [])
+
+    if (attackPlayer === -1) return
+
+    const card = players[attackPlayer].cards[attacker]
+
+    ctx.drawImage(
+      card.imageObject,
+      Math.floor(card.x + card.offsetX),
+      Math.floor(card.y + card.offsetY),
+      CARD_WIDTH,
+      CARD_HEIGHT
+    )
+
+    players.forEach((player, playerIndex) => {
+      player.cards.forEach((card) => {
+        if (card.hp > 0) {
+          ctx.lineWidth = 3
+          ctx.strokeStyle = '#333'
+          ctx.fillStyle = '#0f0'
+
+          const y = card.y + (playerIndex === 1 ? -28 : 10 + CARD_HEIGHT)
+
+          ctx.fillRect(card.x, y, CARD_WIDTH * (Math.max(card.hp, 0) / card.max_hp), 16)
+          ctx.strokeRect(card.x, y, CARD_WIDTH, 16)
+        }
+      })
+    })
+  }
+
+  const attackAtStep = (
+    attackerLeft: number,
+    attackerTop: number,
+    defenderLeft: number,
+    defenderTop: number,
+    attacker: number,
+    defender: number,
+    card: Card,
+    done: any
+  ) => {
+    const k = defenderTop - attackerTop
+    const l = defenderLeft - attackerLeft
+
+    const offset = Math.abs(defender - attacker)
+    const max = 50 + offset * 6
+    const max2 = Math.floor(max / 2)
+
+    let x = 0
+    attackInterval.current = setInterval(() => {
+      x += 1
+      // const y = (x > max2 ? max - x : x) / max2
+      // card.offsetX = y * y * l
+      // card.offsetY = y * y * k
+      if (x > max2) {
+        const y = (x - max2) / max2
+        const offset = outFunc(y)
+        card.offsetX = l - offset * l
+        card.offsetY = k - offset * k
+      } else {
+        const y = x / max2
+        const offset = inFunc(y)
+        card.offsetX = offset * l
+        card.offsetY = offset * k
+      }
+
+      if (x === max2) {
+        const { cards: cardsAttacker } = players[attackPlayer]
+        const { cards: cardsDefender } = players[defendPlayer]
+        cardsDefender[defender].hp -= cardsAttacker[attacker].atk
+      }
+
+      draw()
+
+      if (x === max) {
+        setTimeout(() => {
+          done()
+        }, 200)
+        clearInterval(attackInterval.current)
+      }
+    }, 15)
+  }
 
   const attack = () => {
-    stepRef.current += 1
-    const step = stepRef.current
+    step += 1
 
     if (step > battleResult.length + 1) {
       return
     }
 
-    const attacker = battleResult[step - 1].atk_card
-    const defender = battleResult[step - 1].def_card
+    attacker = battleResult[step - 1].atk_card
+    defender = battleResult[step - 1].def_card
 
-    const attackPlayer = 1 - (step % 2)
-    const defendPlayer = 1 - attackPlayer
+    attackPlayer = 1 - (step % 2)
+    defendPlayer = 1 - attackPlayer
 
-    const attackerCard: any = players[attackPlayer].cards[attacker]
-    const attackerPosition = playerCards.current[attackPlayer][attacker]?.getBoundingClientRect?.()
-    const defenderPosition = playerCards.current[defendPlayer][defender]?.getBoundingClientRect?.()
+    const attackerPosition = players[attackPlayer].cards[attacker]
+    const defenderPosition = players[defendPlayer].cards[defender]
 
-    setAttackerFighting({
-      step: 0,
-      attacker,
-      defender,
-      attackerLeft: attackerPosition.left,
-      attackerTop: attackerPosition.top,
-      defenderLeft: defenderPosition.left,
-      defenderTop: defenderPosition.top + (attackPlayer ? 100 : -100),
-      attackerCard,
-    })
-
-    setTimeout(
-      () => setAttackerFighting((attackerFighting) => ({ ...attackerFighting, step })),
-      100
-    )
+    setTimeout(() => {
+      attackAtStep(
+        attackerPosition.x,
+        attackerPosition.y,
+        defenderPosition.x,
+        defenderPosition.y + ((attackPlayer ? -1 : 1) * Math.floor(CARD_HEIGHT)) / 2,
+        attacker,
+        defender,
+        players[attackPlayer].cards[attacker],
+        attack
+      )
+    }, 100)
   }
 
-  if (battle.loading) return <CircularProgress />
+  useEffect(() => {
+    const data: any = state
 
-  const defendPlayer = 1 - (stepRef.current % 2)
+    battleResult = data.battle_result
+    players = data.players
+    let done = 0
+    players.forEach((player: Player, playerIndex: number) => {
+      player.cards.forEach((card, cardIndex) => {
+        card.imageObject = new Image()
+        card.imageObject.src = card.image
+
+        card.imageObject.onload = () => {
+          card.x = (SCREEN_WIDTH - DECK_WIDTH) / 2 + cardIndex * (CARD_WIDTH + SPACE)
+          card.y = playerIndex === 1 ? OFFSET_Y : SCREEN_HEIGHT - OFFSET_Y - CARD_HEIGHT
+          card.offsetX = 0
+          card.offsetY = 0
+
+          done += 1
+          if (done === 10) {
+            setBattle({ begin: true, loading: false })
+            step = 0
+            attack()
+          }
+        }
+      })
+    })
+
+    return () => {
+      clearInterval(attackInterval.current)
+    }
+  }, [])
 
   return (
     <>
-      <div className="Battle fw fh d-f ai-c fd-c jc-sb">
-        {players.map((player, playerIndex) => (
-          <div className="d-f" key={playerIndex}>
-            {player.cards.map((item, i) => (
-              <div>
-                <div className="d-f jc-c">
-                  {item.hp}/{item.max_hp}
-                </div>
-                <Card
-                  innerRef={(ref: any) => (playerCards.current[playerIndex][i] = ref)}
-                  {...item}
-                  style={{
-                    visibility:
-                      attackerFighting.step &&
-                      playerIndex === defendPlayer &&
-                      attackerFighting.attacker === i
-                        ? 'hidden'
-                        : 'visible',
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+      <div className="Battle d-f ai-c jc-c h-100">
+        {battle.loading ? (
+          <CircularProgress />
+        ) : (
+          <canvas ref={canvasRef} width={SCREEN_WIDTH} height={SCREEN_HEIGHT} />
+        )}
       </div>
-      <Attacker
-        {...attackerFighting}
-        setPlayers={setPlayers}
-        done={() => {
-          setAttackerFighting({ ...attackerFighting, step: 0 })
-          setTimeout(attack, 100)
-        }}
-      />
-      {!battle.begin && (
-        <div className="d-f ai-c jc-c fw fh" style={{ position: 'fixed', top: 0, left: 0 }}>
-          <Button
-            variant="contained"
-            loading={battle.loading}
-            onClick={() => {
-              setBattle((battle) => ({ ...battle, begin: true }))
-              attack()
-            }}
-          >
-            Bắt đầu
-          </Button>
-        </div>
-      )}
     </>
   )
 }

@@ -80,7 +80,7 @@ const request = async (
         false &&
           configureStore.dispatch({
             type: CREATE_TOAST,
-            payload: { duration: 3000, type: status, message: { content: message } },
+            payload: { type: status, message: { content: message } },
           })
 
         resolve(data)

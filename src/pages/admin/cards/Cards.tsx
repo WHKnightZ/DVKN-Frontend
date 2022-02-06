@@ -5,7 +5,7 @@ import { apiUrls } from 'configs/apis'
 import { DEFAULT_PAGE_SIZE } from 'configs/constants'
 import { DataTable } from 'components'
 import { CardType, TableDataType, TableFieldsType } from 'types'
-import InputSearch from 'components/input/InputSearch'
+import { InputSearch } from 'components'
 import { useModalConfirm } from 'store/modalConfirm'
 import { mappingElements, mappingTypes } from './constants'
 import { useHistory } from 'react-router-dom'
@@ -46,7 +46,7 @@ const Cards: React.FC = () => {
   const deleteItem = useCallback(
     (id: string) => {
       setLoading(true)
-      apiDelete(apiUrls.cards(id), {}, ({ status }) => {
+      apiDelete(apiUrls.adminCards(id), {}, ({ status }) => {
         if (status) {
           getItems()
         } else setLoading(false)

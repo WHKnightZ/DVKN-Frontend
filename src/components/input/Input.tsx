@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react'
 import TopLabel from './TopLabel'
 import './index.scss'
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   fullWidth?: boolean
   label?: string
   error?: any

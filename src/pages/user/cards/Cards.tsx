@@ -35,7 +35,7 @@ const Cards: React.FC = () => {
   return (
     <div className="Cards">
       <h2 className="mb-2">Bộ bài</h2>
-      <div className="row">
+      <div className="row" style={{ justifyContent: 'center' }}>
         {cards.map(({ id, thumbnail, name, level, attack, defend, army }) => (
           <div key={id} className="col-6">
             <Card className="d-f">

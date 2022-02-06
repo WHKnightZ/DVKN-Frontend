@@ -210,7 +210,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
 
   useEffect(() => {
     if (cardId) {
-      apiGet(apiUrls.cards(cardId), {}, ({ status, data }) => {
+      apiGet(apiUrls.adminCards(cardId), {}, ({ status, data }) => {
         if (status) {
           setValues({
             id: cardId,

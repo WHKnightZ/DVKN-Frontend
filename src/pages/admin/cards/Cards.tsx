@@ -30,7 +30,7 @@ const Cards: React.FC = () => {
   const getItems = useCallback(() => {
     setLoading(true)
     apiGet(
-      apiUrls.cards(),
+      apiUrls.adminCards(),
       {
         page: page.current,
         page_size: pageSize,

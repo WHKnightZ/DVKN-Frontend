@@ -8,7 +8,8 @@ import SignIn from '../auth/SignIn'
 import SignUp from '../auth/SignUp'
 import InitDeck from '../auth/InitDeck'
 import Home from '../home/Home'
-import Battle from '../battle/BattleCanvas'
+
+const Battle = React.lazy(() => import('../battle/Battle'))
 
 const routes = [
   { path: 'khoi-tao', component: InitDeck, title: 'Bộ bài' },

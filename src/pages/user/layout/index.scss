@@ -12,3 +12,9 @@
   overflow-x: auto;
   padding: 0px 40px;
 }
+
+@media screen and (max-width: 860px) {
+  .Main {
+    padding: 0px 8px;
+  }
+}

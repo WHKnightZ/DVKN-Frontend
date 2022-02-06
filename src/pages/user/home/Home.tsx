@@ -14,7 +14,7 @@ const Home: React.FC = () => {
   const [users, setUsers] = useState<{ username: string; avatar: string }[]>([])
 
   useEffect(() => {
-    apiGet(apiUrls.users(), {}, ({ status, data }) => {
+    apiGet(apiUrls.users(), { page_size: 12 }, ({ status, data }) => {
       if (status) setUsers(data.items)
     })
   }, [])

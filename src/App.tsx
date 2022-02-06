@@ -27,10 +27,10 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const userInfo = getUserLS()
-    const { access_token } = userInfo
+    const { access_token, is_admin } = userInfo
     if (access_token) {
       dispatch(updateAuth(userInfo))
-      // if (!pathname.includes('/admin')) history.push('/admin')
+      if (is_admin && !pathname.includes('/admin')) history.push('/admin')
     }
     setInitializing(false)
   }, [])

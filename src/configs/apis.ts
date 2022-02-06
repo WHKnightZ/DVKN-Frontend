@@ -1,4 +1,4 @@
-export const { REACT_APP_API_URL: API_URL } = { REACT_APP_API_URL: 'http://localhost:5012' }
+export const { REACT_APP_API_URL: API_URL } = process.env
 // { REACT_APP_API_URL: 'http://localhost:5012' } || process.env //= process.env
 
 export const apiUrls = {

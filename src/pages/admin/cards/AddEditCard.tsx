@@ -13,7 +13,7 @@ import {
   mappingCardTypeImage,
 } from './utils'
 import { defaultInitialValues, listTypes, CARD_TYPES, listElements } from './constants'
-import { convertToId } from 'utils'
+import { convertToId, resizeImage } from 'utils'
 import { uploadMultiFiles } from 'components/uploadImage/utils'
 import { useApis } from 'services/api'
 import { apiUrls } from 'configs/apis'
@@ -21,6 +21,7 @@ import { CARD_WIDTH, CARD_HEIGHT, CARD_WIDTH2, CARD_HEIGHT2 } from 'configs/cons
 import * as Yup from 'yup'
 import './index.scss'
 import { useHistory } from 'react-router-dom'
+import defaultCardThumbnail from 'assets/images/default_card_thumbnail.jpg'
 
 let fileThumbnail: any
 
@@ -175,14 +176,22 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
             const file = new File([blob as any], `${id}/${rank}.png`)
             images.push({ file, name: file.name })
             countDone += 1
+
             if (countDone === total) {
-              images.push({ file: fileThumbnail, name: `${id}/thumbnail.png` })
-              uploadMultiFiles({
-                files: images,
-                prefix: 'cards',
-                onSuccess: done,
-                contentType: 'image/png',
-              })
+              const upload = () =>
+                uploadMultiFiles({
+                  files: images,
+                  prefix: 'cards',
+                  onSuccess: done,
+                  contentType: 'image/png',
+                })
+
+              if (fileThumbnail)
+                resizeImage(URL.createObjectURL(fileThumbnail), 275, 374, (file) => {
+                  images.push({ file, name: `${id}/thumbnail.png` })
+                  upload()
+                })
+              else upload()
             }
           },
           'image/png',
@@ -203,7 +212,6 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     touched,
     errors,
     handleBlur,
-    setFieldError,
   } = formik
 
   const { name, type, thumbnail, imgThumbnail, element } = values
@@ -237,10 +245,9 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
   }, [canvasRef, loaded, type, imgThumbnail, element])
 
   useEffect(() => {
-    if (!thumbnail) return
-
     const imgThumbnail = new Image()
-    imgThumbnail.src = thumbnail
+    imgThumbnail.setAttribute('crossorigin', 'anonymous')
+    imgThumbnail.src = thumbnail || defaultCardThumbnail
     imgThumbnail.onload = () => {
       setFieldValue('imgThumbnail', imgThumbnail)
     }

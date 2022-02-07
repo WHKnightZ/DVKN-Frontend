@@ -19,26 +19,27 @@ type CallbackType = (data: {
 
 const refresh = async () => {
   const refreshToken = configureStore.getState().auth.refresh_token
-  if (!refreshToken) return false
+  if (refreshToken) {
+    const headers = { Authorization: `Bearer ${refreshToken}` }
 
-  const headers = { Authorization: `Bearer ${refreshToken}` }
-
-  try {
-    const response = await axios.post(apiUrls.refresh(), {}, { headers })
-    const { data: responseData }: any = response
-    const { status, data } = responseData
-    if (status === SUCCESS) {
-      updateUserLS(data)
-      configureStore.dispatch({
-        type: UPDATE_AUTH,
-        payload: data,
-      })
-      return true
-    }
-  } catch (e) {}
+    try {
+      const response = await axios.post(apiUrls.refresh(), {}, { headers })
+      const { data: responseData }: any = response
+      const { status, data } = responseData
+      if (status === SUCCESS) {
+        updateUserLS(data)
+        configureStore.dispatch({
+          type: UPDATE_AUTH,
+          payload: data,
+        })
+        return true
+      }
+    } catch (e) {}
+  }
   // If cannot refresh => sign out
   removeUserLS()
   configureStore.dispatch({ type: CLEAR_AUTH })
+  return false
 }
 
 /**
@@ -92,7 +93,7 @@ const request = async (
         const { response = {} } = error || {}
         const { status } = response
 
-        if (status === 403) {
+        if (status === 403 || status === 401 || status === 422) {
           if (!isRefresh) {
             const res = await refresh()
             if (res) {

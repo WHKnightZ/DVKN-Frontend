@@ -29,3 +29,31 @@ export const drawRoundedImage = (
 
   ctx.restore()
 }
+
+export const resizeImage = (
+  dataUrl: any,
+  newWidth: number,
+  newHeight: number,
+  callback: (file: any) => void
+) => {
+  const image = new Image()
+  image.src = dataUrl
+
+  image.onload = () => {
+    const canvas = document.createElement('canvas')
+    canvas.width = newWidth
+    canvas.height = newHeight
+
+    const ctx = canvas.getContext('2d') as any
+    ctx.drawImage(image, 0, 0, newWidth, newHeight)
+
+    canvas.toBlob(
+      (blob: any) => {
+        const file = new File([blob], 'file.png')
+        callback(file)
+      },
+      'image/png',
+      0.85
+    )
+  }
+}

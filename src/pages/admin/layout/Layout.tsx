@@ -13,7 +13,7 @@ const Dashboard = React.lazy(() => import('../dashboard/Dashboard'))
 
 const routes = [
   { path: 'the-bai', component: Cards, title: 'Danh sách Thẻ bài' },
-  { path: 'the-bai/them-moi', component: AddCard, title: 'Thêm Thẻ bài' },
+  { path: 'the-bai/them-moi', component: AddCard, title: 'Thêm Thẻ bài', hideTitle: true },
   { path: 'the-bai/:id', component: EditCard, title: 'card_management', hideTitle: true },
   { path: 'dashboard', component: Dashboard, title: 'dashboard' },
 ]

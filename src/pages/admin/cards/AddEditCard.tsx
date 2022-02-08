@@ -263,7 +263,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
 
   return (
     <>
-      {!!cardId && <Title>Thẻ bài {name || cardId}</Title>}
+      <Title hasGoBack>{cardId ? `Thẻ bài ${name || cardId}` : 'Thêm Thẻ bài'}</Title>
       <FormikProvider value={formik}>
         <Form className="row pd-big" autoComplete="off" noValidate onSubmit={handleSubmit}>
           <div className="col-8">
@@ -329,7 +329,13 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     min={0}
                     max={100}
                   />
-                  <Input label="Thông tin" rows={3} multiline {...getFieldProps('description')} />
+                  <Input
+                    label="Thông tin"
+                    rows={3}
+                    multiline
+                    maxLength={500}
+                    {...getFieldProps('description')}
+                  />
                 </div>
                 <div className="col-6 d-f ai-c fd-c" style={{ marginBottom: 0 }}>
                   <div className="form-title">Ảnh thẻ bài</div>
@@ -364,7 +370,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     label="Trưởng tài"
                     rows={3}
                     multiline
-                    {...getFieldProps('primary_skill')}
+                    maxLength={500}
+                    {...getFieldProps('captain_skill')}
                   />
                 </div>
                 <div className="col-6 form-stack">
@@ -372,7 +379,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     label="Hiệu tài"
                     rows={3}
                     multiline
-                    {...getFieldProps('secondary_skill')}
+                    maxLength={500}
+                    {...getFieldProps('specific_skill')}
                   />
                 </div>
               </div>

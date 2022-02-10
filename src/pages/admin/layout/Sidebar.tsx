@@ -16,24 +16,9 @@ const Sidebar: React.FC = () => {
       icon: 'clone', //id-badge
     },
     {
-      title: 'dashboard',
-      path: '/admin/dashboard',
-      icon: 'chart-bar',
-    },
-    {
-      title: 'user_management',
-      path: '/admin/users',
+      title: 'account_management',
+      path: '/admin/tai-khoan',
       icon: 'users',
-    },
-    {
-      title: 'category_management',
-      path: '/admin/categories',
-      icon: 'list-ul',
-    },
-    {
-      title: 'user_request',
-      path: '/admin/request',
-      icon: 'user-clock',
     },
   ]
 

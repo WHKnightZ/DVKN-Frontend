@@ -25,7 +25,10 @@ const Cards: React.FC = () => {
   const renderAttribute = (icon: string, title: string, value: string) => {
     return (
       <div className="d-f ai-c" style={{ marginBottom: 3 }}>
-        <i className={icon} style={{ color: '#666', marginRight: 8 }} />
+        <i
+          className={`d-f ai-c jc-c ${icon}`}
+          style={{ color: '#666', marginRight: 8, width: 16, height: 16 }}
+        />
         <span style={{ width: 58 }}>{title}</span>
         <span>{value}</span>
       </div>
@@ -42,10 +45,10 @@ const Cards: React.FC = () => {
               <img alt="" src={thumbnail} />
               <div className="ml-1 p-1">
                 <div className="b mb-1">{name}</div>
-                {renderAttribute('fas fa-ankh', 'Cấp', level)}
-                {renderAttribute('fas fa-ankh', 'Công', attack)}
-                {renderAttribute('fas fa-ankh', 'Thủ', defend)}
-                {renderAttribute('fas fa-ankh', 'Lính', army)}
+                {renderAttribute('fas fa-star', 'Cấp', level)}
+                {renderAttribute('fas fa-fire', 'Công', attack)}
+                {renderAttribute('fas fa-shield-alt', 'Thủ', defend)}
+                {renderAttribute('fas fa-user-friends', 'Lính', army)}
                 <Button
                   variant="contained"
                   onClick={() => history.push('/the-bai/thong-tin', id)}

@@ -1,6 +1,7 @@
 import { Card } from '@mui/material'
-import { Button } from 'components'
+import { Button, Pagination } from 'components'
 import { apiUrls } from 'configs/apis'
+import { DEFAULT_USER_PAGE_SIZE } from 'configs/constants'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApis } from 'services/api'
@@ -10,15 +11,27 @@ const BattlePlayers: React.FC = () => {
   const { apiGet, apiPost } = useApis()
   const history = useHistory()
 
-  const [players, setPlayers] = useState<
-    { username: string; avatar: string; level: number; win_battle: number; total_battle: number }[]
-  >([])
+  const [data, setData] = useState<{
+    items: {
+      username: string
+      avatar: string
+      level: number
+      win_battle: number
+      total_battle: number
+    }[]
+    total: number
+  }>({ items: [], total: 0 })
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
-    apiGet(apiUrls.battlePlayers(), { page_size: 12 }, ({ status, data }) => {
-      if (status) setPlayers(data.items)
-    })
-  }, [])
+    apiGet(
+      apiUrls.battlePlayers(),
+      { page, page_size: DEFAULT_USER_PAGE_SIZE },
+      ({ status, data }) => {
+        if (status) setData(data)
+      }
+    )
+  }, [page])
 
   const attack = (username: string) => {
     apiPost(
@@ -35,11 +48,13 @@ const BattlePlayers: React.FC = () => {
     )
   }
 
+  const { items, total } = data
+
   return (
     <div>
       <h2 className="mb-2">So tài</h2>
       <div className="row">
-        {players.map(({ username, avatar, level, win_battle, total_battle }) => (
+        {items.map(({ username, avatar, level, win_battle, total_battle }) => (
           <div key={username} className="mb-2 col-4">
             <Card className="d-f">
               <img alt="" src={avatar} style={{ width: 80, height: 116, marginBottom: 8 }} />
@@ -59,6 +74,14 @@ const BattlePlayers: React.FC = () => {
             </Card>
           </div>
         ))}
+      </div>
+      <div className="d-f jc-c mb-2">
+        <Pagination
+          page={page}
+          total={total}
+          pageSize={DEFAULT_USER_PAGE_SIZE}
+          onChange={(page) => setPage(page)}
+        />
       </div>
     </div>
   )

@@ -9,13 +9,13 @@ import Navbar from './Navbar'
 const Cards = React.lazy(() => import('../cards/Cards'))
 const AddCard = React.lazy(() => import('../cards/AddCard'))
 const EditCard = React.lazy(() => import('../cards/EditCard'))
-const Dashboard = React.lazy(() => import('../dashboard/Dashboard'))
+const Accounts = React.lazy(() => import('../accounts/Accounts'))
 
 const routes = [
   { path: 'the-bai', component: Cards, title: 'Danh sách Thẻ bài' },
   { path: 'the-bai/them-moi', component: AddCard, title: 'Thêm Thẻ bài', hideTitle: true },
-  { path: 'the-bai/:id', component: EditCard, title: 'card_management', hideTitle: true },
-  { path: 'dashboard', component: Dashboard, title: 'dashboard' },
+  { path: 'the-bai/:id', component: EditCard, title: 'Sửa Thẻ bài', hideTitle: true },
+  { path: 'tai-khoan', component: Accounts, title: 'Danh sách Tài khoản' },
 ]
 
 const Layout: React.FC = () => {

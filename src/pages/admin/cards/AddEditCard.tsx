@@ -107,7 +107,19 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: (
-      { name, id, type, element, description, attack, defend, army, probability_register },
+      {
+        name,
+        id,
+        type,
+        element,
+        description,
+        attack,
+        defend,
+        army,
+        probability_register,
+        captain_skill,
+        specific_skill,
+      },
       { validateForm }
     ) => {
       setLoading(true)
@@ -141,6 +153,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
             defend,
             army,
             probability_register,
+            captain_skill,
+            specific_skill,
           },
           ({ id: resId, status, text }) => {
             setLoading(false)
@@ -221,14 +235,12 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
       apiGet(apiUrls.adminCards(cardId), {}, ({ status, data }) => {
         if (status) {
           setValues({
+            ...data,
             id: cardId,
-            name: data.name,
             type: '' + data.type,
             element: '' + data.element,
-            thumbnail: data.thumbnail,
             imgThumbnail: null,
             probability_register: '' + data.probability_register,
-            description: data.description,
             attack: '' + data.attack,
             defend: '' + data.defend,
             army: '' + data.army,
@@ -263,7 +275,7 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
 
   return (
     <>
-      {!!cardId && <Title>Thẻ bài {name || cardId}</Title>}
+      <Title hasGoBack>{cardId ? `Thẻ bài ${name || cardId}` : 'Thêm Thẻ bài'}</Title>
       <FormikProvider value={formik}>
         <Form className="row pd-big" autoComplete="off" noValidate onSubmit={handleSubmit}>
           <div className="col-8">
@@ -329,7 +341,13 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     min={0}
                     max={100}
                   />
-                  <Input label="Thông tin" rows={3} multiline {...getFieldProps('description')} />
+                  <Input
+                    label="Thông tin"
+                    rows={3}
+                    multiline
+                    maxLength={500}
+                    {...getFieldProps('description')}
+                  />
                 </div>
                 <div className="col-6 d-f ai-c fd-c" style={{ marginBottom: 0 }}>
                   <div className="form-title">Ảnh thẻ bài</div>
@@ -364,7 +382,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     label="Trưởng tài"
                     rows={3}
                     multiline
-                    {...getFieldProps('primary_skill')}
+                    maxLength={500}
+                    {...getFieldProps('captain_skill')}
                   />
                 </div>
                 <div className="col-6 form-stack">
@@ -372,7 +391,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
                     label="Hiệu tài"
                     rows={3}
                     multiline
-                    {...getFieldProps('secondary_skill')}
+                    maxLength={500}
+                    {...getFieldProps('specific_skill')}
                   />
                 </div>
               </div>

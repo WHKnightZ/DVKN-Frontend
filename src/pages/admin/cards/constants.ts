@@ -62,10 +62,6 @@ export const defaultInitialValues: CardType = {
   attack: '50',
   defend: '50',
   army: '50',
+  captain_skill: '',
+  specific_skill: '',
 }
-
-export const defaultModal: {
-  show: boolean
-  type: string
-  initialValues: CardType
-} = { show: false, type: 'create', initialValues: defaultInitialValues }

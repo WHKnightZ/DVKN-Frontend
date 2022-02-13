@@ -116,10 +116,12 @@ button {
   }
 }
 
+.a,
 a {
   text-decoration: none;
   color: var(--cl-primary);
   transition: all 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     color: #03a9f4 !important;
@@ -134,4 +136,20 @@ a {
   cursor: pointer;
   color: var(--cl-primary);
   font-size: 13.5px;
+}
+
+textarea {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #b5b6b700;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: #c2c3c47f;
+  }
 }

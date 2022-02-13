@@ -48,7 +48,7 @@ const ModalConfirmPassword: React.FC<Props> = ({ show, content, title, onSuccess
   const error = password ? invalid : ''
 
   return (
-    <Dialog open={show} fullWidth maxWidth="xs">
+    <Dialog open={show} fullWidth maxWidth="xs" className="Modal">
       <DialogTitle style={{ textAlign: 'center' }}>{title}</DialogTitle>
       <DialogContent style={{ fontWeight: 500, textAlign: 'center' }}>
         {content}
@@ -73,7 +73,7 @@ const ModalConfirmPassword: React.FC<Props> = ({ show, content, title, onSuccess
           errorFocused={password === wrongPassword.value}
         />
       </DialogContent>
-      <DialogActions className="pt-0 mr-3 mb-3">
+      <DialogActions>
         <Button onClick={onClose} disabled={loading}>
           Cancel
         </Button>

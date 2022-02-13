@@ -9,17 +9,11 @@ export const LANGUAGES = {
 
 export const DEFAULT_AVATAR = defaultAvatar
 export const DEFAULT_PAGE_SIZE = 10
+export const DEFAULT_USER_PAGE_SIZE = 12
 export const MAX_PAGE_SIZE = 256
 
 export const SUCCESS = true
 export const ERROR = false
-
-export const AUTH_ROUTES = {
-  SIGN_IN: 'SIGN_IN',
-  FORGOT_PASSWORD: 'FORGOT_PASSWORD',
-  RESET_PASSWORD: 'RESET_PASSWORD',
-  FORCE_CHANGE_PASSWORD: 'FORCE_CHANGE_PASSWORD',
-}
 
 export const today = new Date()
 

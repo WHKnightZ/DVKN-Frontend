@@ -129,7 +129,7 @@ const UploadMultiImages: React.FC<Props> = ({ prefix, images: imagesDefault, onS
                     onClick={() => handleRemove(item.id)}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
-                    <i className="mn-icon-x-circle" />
+                    <i className="fas fa-times-circle" />
                   </div>
                 )}
               </div>

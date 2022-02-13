@@ -225,7 +225,7 @@ const Battle: React.FC = () => {
 
   return (
     <>
-      <div className="Battle d-f ai-c jc-c h-100">
+      <div className="Battle d-f ai-c jc-c fh">
         {battle.loading ? (
           <CircularProgress />
         ) : (

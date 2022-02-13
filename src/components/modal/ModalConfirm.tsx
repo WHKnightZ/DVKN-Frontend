@@ -14,17 +14,17 @@ interface Props {
 }
 
 const ModalConfirm: React.FC<Props> = (props) => {
-  const { show, title, confirm, cancel, center, small } = props
+  const { show, title, confirm, cancel, center, small = true } = props
   let { content } = props
   content = formatContent(content)
 
   return (
-    <Dialog open={show} fullWidth maxWidth={small ? 'xs' : 'sm'}>
+    <Dialog open={show} className="Modal" fullWidth maxWidth={small ? 'xs' : 'sm'}>
       <DialogTitle style={{ textAlign: center ? 'center' : undefined }}>{title}</DialogTitle>
       <DialogContent style={{ fontWeight: 500, textAlign: center ? 'center' : undefined }}>
         {content}
       </DialogContent>
-      <DialogActions className="pt-0 mr-3 mb-3">
+      <DialogActions>
         {cancel && (
           <Button onClick={cancel.action} color="primary">
             {cancel.text}

@@ -4,13 +4,11 @@ import { apiUrls } from 'configs/apis'
 import React, { useEffect, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useApis } from 'services/api'
-import { useToasts } from 'store/toasts'
 import { CardType } from 'types'
 import './index.scss'
 
 const CardDetail: React.FC = () => {
   const { apiGet, apiPut } = useApis()
-  const { createToast } = useToasts()
   const { state } = useLocation()
   const history = useHistory()
   const id = state as string
@@ -33,13 +31,17 @@ const CardDetail: React.FC = () => {
 
   const upgrade = () => {
     setLoading(true)
-    apiPut(apiUrls.upgradeCard(id), {}, ({ status, text, data }) => {
-      setLoading(false)
-      createToast({ message: { content: text }, type: status })
-      if (status) {
-        setCard((card) => ({ ...card, ...data }))
-      }
-    })
+    apiPut(
+      apiUrls.upgradeCard(id),
+      {},
+      ({ status, data }) => {
+        setLoading(false)
+        if (status) {
+          setCard((card) => ({ ...card, ...data }))
+        }
+      },
+      true
+    )
   }
 
   const { thumbnail, level, attack, defend, army } = card || {}

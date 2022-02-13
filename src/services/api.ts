@@ -62,7 +62,9 @@ const request = async (
   const accessToken = configureStore.getState().auth.access_token
   const headers = { Authorization: `Bearer ${accessToken}` }
 
-  const defaultParams = { headers, method, url, ...options }
+  const { showToast, ...optionsRest } = options
+
+  const defaultParams = { headers, method, url, ...optionsRest }
   const paramConfigs: AxiosRequestConfig =
     method === 'get' ? { ...defaultParams, params: data } : { ...defaultParams, data: data }
 
@@ -78,7 +80,7 @@ const request = async (
           text: message,
           data: data.data,
         }
-        false &&
+        showToast &&
           configureStore.dispatch({
             type: CREATE_TOAST,
             payload: { type: status, message: { content: message } },
@@ -121,8 +123,8 @@ const request = async (
  * @param {Object} params Request params
  * @param {Function} callback callback
  */
-const apiGet = (url = '', params = {}, callback?: CallbackType) => {
-  return request('get', url, params, callback)
+const apiGet = (url = '', params = {}, callback?: CallbackType, showToast?: boolean) => {
+  return request('get', url, params, callback, { showToast })
 }
 
 /**
@@ -132,8 +134,8 @@ const apiGet = (url = '', params = {}, callback?: CallbackType) => {
  * @param {Object} params Request params
  * @param {Function} callback callback
  */
-const apiPost = (url = '', params = {}, callback?: CallbackType) => {
-  return request('post', url, params, callback)
+const apiPost = (url = '', params = {}, callback?: CallbackType, showToast?: boolean) => {
+  return request('post', url, params, callback, { showToast })
 }
 
 /**
@@ -143,8 +145,8 @@ const apiPost = (url = '', params = {}, callback?: CallbackType) => {
  * @param {Object} params Request params
  * @param {Function} callback callback
  */
-const apiPut = (url = '', params = {}, callback?: CallbackType) => {
-  return request('put', url, params, callback)
+const apiPut = (url = '', params = {}, callback?: CallbackType, showToast?: boolean) => {
+  return request('put', url, params, callback, { showToast })
 }
 
 /**
@@ -154,8 +156,8 @@ const apiPut = (url = '', params = {}, callback?: CallbackType) => {
  * @param {Object} params Request params
  * @param {Function} callback callback
  */
-const apiDelete = (url = '', params = {}, callback?: CallbackType) => {
-  return request('delete', url, params, callback)
+const apiDelete = (url = '', params = {}, callback?: CallbackType, showToast?: boolean) => {
+  return request('delete', url, params, callback, { showToast })
 }
 
 export const useApis = () => ({

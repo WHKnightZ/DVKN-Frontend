@@ -107,7 +107,19 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: (
-      { name, id, type, element, description, attack, defend, army, probability_register },
+      {
+        name,
+        id,
+        type,
+        element,
+        description,
+        attack,
+        defend,
+        army,
+        probability_register,
+        captain_skill,
+        specific_skill,
+      },
       { validateForm }
     ) => {
       setLoading(true)
@@ -141,6 +153,8 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
             defend,
             army,
             probability_register,
+            captain_skill,
+            specific_skill,
           },
           ({ id: resId, status, text }) => {
             setLoading(false)
@@ -221,14 +235,12 @@ const AddEditCard: React.FC<Props> = ({ id: cardId }) => {
       apiGet(apiUrls.adminCards(cardId), {}, ({ status, data }) => {
         if (status) {
           setValues({
+            ...data,
             id: cardId,
-            name: data.name,
             type: '' + data.type,
             element: '' + data.element,
-            thumbnail: data.thumbnail,
             imgThumbnail: null,
             probability_register: '' + data.probability_register,
-            description: data.description,
             attack: '' + data.attack,
             defend: '' + data.defend,
             army: '' + data.army,

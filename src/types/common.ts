@@ -94,17 +94,19 @@ export type CategoryType = {
   total_article: number
 }
 
-export type UserType = {
-  birth_date?: any
-  id?: string
-  gender?: any
-  email: string
-  status?: any
-  first_name: string
-  last_name: string
-  created_date?: number
+export type AccountType = {
+  username?: string
+  card_images?: { id: string; image: string }[]
+  is_admin?: boolean
   avatar?: string
-  group_id?: string
+  barrel?: number
+  diamond?: number
+  exp?: number
+  gold?: number
+  health?: number
+  level?: number
+  total_battle?: number
+  win_battle?: number
 }
 
 export type CardType = {
@@ -121,4 +123,6 @@ export type CardType = {
   army: any
   level?: any
   is_in_deck?: boolean
+  captain_skill?: string
+  specific_skill?: string
 }

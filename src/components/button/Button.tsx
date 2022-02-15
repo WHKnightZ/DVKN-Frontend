@@ -1,5 +1,6 @@
 import React, { MutableRefObject } from 'react'
 import { Button as MuiButton, ButtonProps, CircularProgress } from '@mui/material'
+import './index.scss'
 
 interface Props extends ButtonProps {
   innerRef?: MutableRefObject<any>
@@ -11,13 +12,20 @@ const Button: React.FC<Props> = ({
   loading,
   children,
   disabled,
+  className = '',
   size = 'small',
   ...rest
 }) => {
   const isSmall = size === 'small'
 
   return (
-    <MuiButton ref={innerRef} disabled={loading || disabled} {...rest} size={size}>
+    <MuiButton
+      className={`Button ${className}`}
+      ref={innerRef}
+      disabled={loading || disabled}
+      {...rest}
+      size={size}
+    >
       {loading ? <CircularProgress size={isSmall ? 20 : 24} color="inherit" /> : children}
     </MuiButton>
   )

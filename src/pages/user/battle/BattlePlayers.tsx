@@ -20,10 +20,14 @@ const BattlePlayers: React.FC = () => {
       total_battle: number
     }[]
     total: number
-  }>({ items: [], total: 0 })
+    loading: boolean
+  }>({ items: [], total: 0, loading: true })
   const [page, setPage] = useState(1)
 
+  const setLoading = (loading: boolean) => setData((data) => ({ ...data, loading }))
+
   useEffect(() => {
+    setLoading(true)
     apiGet(
       apiUrls.battlePlayers(),
       { page, page_size: DEFAULT_USER_PAGE_SIZE },
@@ -34,21 +38,24 @@ const BattlePlayers: React.FC = () => {
   }, [page])
 
   const attack = (username: string) => {
+    setLoading(true)
     apiPost(
       apiUrls.battle(),
       {
         username,
       },
       ({ status, data }) => {
+        setLoading(false)
         if (status) {
           localStorage.setItem('check-refresh', 'ok')
           history.push('/chien-dau', data)
         }
-      }
+      },
+      true
     )
   }
 
-  const { items, total } = data
+  const { items, total, loading } = data
 
   return (
     <div>
@@ -67,7 +74,12 @@ const BattlePlayers: React.FC = () => {
                 <div style={{ fontSize: 13.5, marginBottom: 8 }}>
                   Thắng {getWinRate(win_battle, total_battle)} %
                 </div>
-                <Button variant="outlined" style={{ height: 24 }} onClick={() => attack(username)}>
+                <Button
+                  variant="outlined"
+                  style={{ height: 24 }}
+                  onClick={() => attack(username)}
+                  disabled={loading}
+                >
                   Đánh
                 </Button>
               </div>

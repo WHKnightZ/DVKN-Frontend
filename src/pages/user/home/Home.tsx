@@ -21,7 +21,8 @@ const Home: React.FC = () => {
     exp,
     current_health,
     max_health,
-    full_health_time = 0,
+    full_health_seconds = 0,
+    full_health_timestamp = 0,
     win_battle,
     total_battle,
     gold,
@@ -59,10 +60,10 @@ const Home: React.FC = () => {
             <div>Kinh nghiệm: {exp}</div>
             <div>
               Sức khỏe: {current_health}/{max_health}{' '}
-              {full_health_time > 0
-                ? `(${Math.ceil(full_health_time / 60)} phút hồi phục, ${moment()
-                    .add(full_health_time, 'second')
-                    .format('HH:mm:ss')})`
+              {full_health_seconds > 0
+                ? `(${Math.ceil(full_health_seconds / 60)} phút hồi phục, ${moment(
+                    full_health_timestamp * 1000
+                  ).format('HH:mm')})`
                 : ''}
             </div>
             <div>Vàng: {gold}</div>

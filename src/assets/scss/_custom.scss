@@ -1,3 +1,7 @@
+body {
+  overflow-y: overlay;
+}
+
 input {
   &:-webkit-autofill,
   &:-webkit-autofill:hover,

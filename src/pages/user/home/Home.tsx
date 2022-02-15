@@ -2,6 +2,7 @@
 import { Card } from '@mui/material'
 import { Button } from 'components'
 import { apiUrls } from 'configs/apis'
+import moment from 'moment'
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useApis } from 'services/api'
@@ -18,7 +19,10 @@ const Home: React.FC = () => {
     avatar,
     level,
     exp,
-    health,
+    current_health,
+    max_health,
+    full_health_seconds = 0,
+    full_health_timestamp = 0,
     win_battle,
     total_battle,
     gold,
@@ -55,7 +59,12 @@ const Home: React.FC = () => {
             <div>Cấp đội: {level}</div>
             <div>Kinh nghiệm: {exp}</div>
             <div>
-              Sức khỏe: {health}/{health}
+              Sức khỏe: {current_health}/{max_health}{' '}
+              {full_health_seconds > 0
+                ? `(${Math.ceil(full_health_seconds / 60)} phút hồi phục, ${moment(
+                    full_health_timestamp * 1000
+                  ).format('HH:mm')})`
+                : ''}
             </div>
             <div>Vàng: {gold}</div>
             <div>Ngọc: {diamond}</div>

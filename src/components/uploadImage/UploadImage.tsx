@@ -85,7 +85,7 @@ const UploadImage: React.FC<Props> = ({
                   onClick={handleRemove}
                   onMouseDown={(e) => e.stopPropagation()}
                 >
-                  <i className="mn-icon-x-circle" />
+                  <i className="fas fa-times-circle" />
                 </div>
               )
             )}

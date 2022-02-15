@@ -39,7 +39,9 @@ export type AuthType = {
   diamond?: number
   exp?: number
   gold?: number
-  health?: number
+  current_health?: number
+  max_health?: number
+  full_health_time?: number
   level?: number
   total_battle?: number
   win_battle?: number
